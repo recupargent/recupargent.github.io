@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Récupérez votre argent — vol retardé et garantie légale</title>
+<meta name="description" content="Outil gratuit : générez une lettre de réclamation pour un vol retardé ou annulé, ou pour un produit en panne sous garantie légale en Belgique.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f6f7fb; --card:#ffffff; --ink:#14213d; --muted:#5b6478; --line:#e3e6ee;
+    --brand:#1f5eff; --brand-dark:#1747c4; --ok:#0f8a5f; --ok-bg:#e7f6ef;
+    --warn:#a15c00; --warn-bg:#fff4e0; --bad:#b42318; --bad-bg:#fdecea; --radius:14px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55}
+  a{color:var(--brand)}
+  .wrap{max-width:860px;margin:0 auto;padding:0 18px}
+  header.hero{background:linear-gradient(135deg,#14213d 0%,#1f3a8a 100%);color:#fff;padding:44px 0 72px}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.05rem;letter-spacing:.2px;opacity:.95}
+  .logo span.dot{width:28px;height:28px;border-radius:8px;background:#ffd166;color:#14213d;display:grid;place-items:center;font-weight:800}
+  .hero h1{font-size:clamp(1.7rem,4.5vw,2.6rem);line-height:1.15;margin:22px 0 12px;font-weight:800}
+  .hero p{margin:0;max-width:620px;color:#d9e1ff;font-size:1.05rem}
+  .badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+  .badge{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);padding:6px 12px;border-radius:999px;font-size:.85rem}
+  main{margin-top:-44px;padding-bottom:40px}
+  .tabs{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .tab{background:var(--card);border:2px solid transparent;border-radius:var(--radius);padding:16px;text-align:left;cursor:pointer;font:inherit;color:inherit;box-shadow:0 4px 18px rgba(20,33,61,.08)}
+  .tab strong{display:block;font-size:1.05rem}
+  .tab small{color:var(--muted)}
+  .tab[aria-selected="true"]{border-color:var(--brand)}
+  .tab .ico{font-size:1.5rem}
+  .panel{background:var(--card);border-radius:var(--radius);box-shadow:0 4px 18px rgba(20,33,61,.08);padding:24px;margin-top:14px}
+  .panel h2{margin:0 0 4px;font-size:1.35rem}
+  .panel > p.lead{margin:0 0 18px;color:var(--muted)}
+  fieldset{border:1px solid var(--line);border-radius:12px;padding:16px;margin:0 0 16px}
+  legend{font-weight:700;padding:0 6px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .full{grid-column:1/-1}
+  label{display:block;font-size:.9rem;font-weight:600;margin-bottom:4px}
+  .hint{display:block;font-weight:400;color:var(--muted);font-size:.8rem;margin-top:2px}
+  input,select,textarea{width:100%;font:inherit;padding:10px 12px;border:1px solid #cfd5e2;border-radius:10px;background:#fff;color:var(--ink)}
+  input:focus,select:focus,textarea:focus{outline:2px solid #bcd0ff;border-color:var(--brand)}
+  textarea{min-height:90px;resize:vertical}
+  .btn{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:10px;padding:12px 18px;font:inherit;font-weight:700;cursor:pointer;background:var(--brand);color:#fff}
+  .btn:hover{background:var(--brand-dark)}
+  .btn.ghost{background:#eef2ff;color:var(--brand)}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+  .verdict{border-radius:12px;padding:14px 16px;margin:18px 0 0;font-size:.95rem}
+  .verdict.ok{background:var(--ok-bg);color:var(--ok)}
+  .verdict.warn{background:var(--warn-bg);color:var(--warn)}
+  .verdict.bad{background:var(--bad-bg);color:var(--bad)}
+  .verdict strong{display:block;font-size:1.05rem;margin-bottom:2px}
+  .amount{font-size:2rem;font-weight:800;display:block;margin:4px 0}
+  .letter{margin-top:18px;display:none}
+  .letter.show{display:block}
+  .letter pre{white-space:pre-wrap;font-family:Georgia,'Times New Roman',serif;font-size:.98rem;background:#fbfbfd;border:1px solid var(--line);border-radius:12px;padding:20px;margin:0 0 12px;line-height:1.6}
+  .copied{color:var(--ok);font-weight:600;font-size:.9rem;align-self:center}
+  .steps{margin:12px 0 0;padding-left:20px;color:var(--muted);font-size:.92rem}
+  .steps li{margin-bottom:4px}
+  .info{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:22px}
+  .info div{background:var(--card);border-radius:12px;padding:16px;box-shadow:0 2px 10px rgba(20,33,61,.05);font-size:.9rem}
+  .info strong{display:block;margin-bottom:4px}
+  .don{background:linear-gradient(135deg,#fff8e6,#fff);border:1px solid #ffe2a0;border-radius:var(--radius);padding:22px;margin-top:22px;text-align:center}
+  .don h3{margin:0 0 6px}
+  .don p{margin:0 0 14px;color:var(--muted)}
+  .don .amounts{display:flex;justify-content:center;flex-wrap:wrap;gap:8px}
+  .don a.btn{background:#ffb703;color:#14213d;text-decoration:none}
+  .don .soon{font-size:.85rem;color:var(--muted)}
+  footer{color:var(--muted);font-size:.82rem;padding:24px 0 40px}
+  footer ul{padding-left:18px}
+  .hidden{display:none !important}
+  @media (max-width:640px){
+    .grid{grid-template-columns:1fr}
+    .info{grid-template-columns:1fr}
+    .panel{padding:18px}
+    .tab{padding:12px}
+    .tab small{display:none}
+  }
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ===== Couche premium ===== */
+  :root{--bg:#f3f5fa;--ink:#0b1530;--brand:#3b5bfd;--brand-dark:#2a45d6;--accent:#ffcc4d;--radius:18px}
+  body{background:
+    radial-gradient(1200px 500px at 85% -10%,rgba(59,91,253,.10),transparent 60%),var(--bg)}
+  h1,h2,h3,.tab strong,.logo{font-family:"Plus Jakarta Sans",Inter,sans-serif}
+  header.hero{position:relative;overflow:hidden;padding:30px 0 96px;
+    background:radial-gradient(700px 380px at 90% 10%,rgba(124,92,255,.55),transparent 60%),
+               radial-gradient(600px 360px at 0% 100%,rgba(59,91,253,.55),transparent 60%),#0b1530}
+  header.hero::before{content:"";position:absolute;inset:0;opacity:.18;
+    background-image:linear-gradient(rgba(255,255,255,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.12) 1px,transparent 1px);
+    background-size:44px 44px;mask-image:linear-gradient(180deg,#000,transparent 85%)}
+  .hero .wrap{position:relative}
+  .topbar{display:flex;justify-content:space-between;align-items:center}
+  .pill-free{font-size:.78rem;font-weight:700;color:#0b1530;background:var(--accent);padding:6px 12px;border-radius:999px}
+  .logo span.dot{background:linear-gradient(135deg,#ffd76e,#ffb703);box-shadow:0 6px 18px rgba(255,183,3,.35)}
+  .hero-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:28px;align-items:center;margin-top:30px}
+  .hero h1{margin:0 0 14px;font-size:clamp(1.9rem,4.6vw,3rem);letter-spacing:-.02em}
+  .hero h1 .grad{background:linear-gradient(90deg,#ffd76e,#ff9f6e);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .stats{display:grid;gap:10px}
+  .stat{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);backdrop-filter:blur(8px);border-radius:16px;padding:14px 16px;color:#fff}
+  .stat b{display:block;font-family:"Plus Jakarta Sans",sans-serif;font-size:1.6rem;line-height:1.1}
+  .stat span{color:#c9d3ff;font-size:.88rem}
+  main{margin-top:-56px}
+  .tabs{background:rgba(255,255,255,.75);backdrop-filter:blur(10px);padding:8px;border-radius:22px;box-shadow:0 18px 50px rgba(11,21,48,.12);border:1px solid #fff}
+  .tab{box-shadow:none;border:2px solid transparent;display:flex;gap:12px;align-items:center;transition:all .2s}
+  .tab .ico{width:46px;height:46px;flex:none;border-radius:14px;display:grid;place-items:center;background:#eef1ff;font-size:1.35rem}
+  .tab[aria-selected="true"]{border-color:transparent;background:linear-gradient(135deg,#3b5bfd,#7c5cff);color:#fff;box-shadow:0 10px 26px rgba(59,91,253,.35)}
+  .tab[aria-selected="true"] small{color:#dfe5ff}
+  .tab[aria-selected="true"] .ico{background:rgba(255,255,255,.18)}
+  .panel{border:1px solid #fff;box-shadow:0 18px 50px rgba(11,21,48,.08);padding:30px;margin-top:18px}
+  .panel h2{font-size:1.6rem;letter-spacing:-.01em}
+  fieldset{border:1px solid #e7eaf3;background:#fbfcff;border-radius:16px;padding:20px 18px 18px;counter-increment:none}
+  legend{background:#0b1530;color:#fff;border-radius:999px;padding:5px 14px;font-size:.85rem;font-family:"Plus Jakarta Sans",sans-serif}
+  input,select,textarea{border:1px solid #dde2ee;border-radius:12px;padding:12px 14px;background:#fff;transition:border-color .15s,box-shadow .15s}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 4px rgba(59,91,253,.15)}
+  .btn{border-radius:12px;padding:14px 22px;background:linear-gradient(135deg,#3b5bfd,#7c5cff);box-shadow:0 10px 24px rgba(59,91,253,.3);transition:transform .15s,box-shadow .15s}
+  .btn:hover{transform:translateY(-1px);box-shadow:0 14px 30px rgba(59,91,253,.38);background:linear-gradient(135deg,#2a45d6,#6a49f5)}
+  .estimate{display:flex;align-items:center;justify-content:space-between;gap:12px;background:linear-gradient(135deg,#0b1530,#1d2f6b);color:#fff;border-radius:16px;padding:14px 18px;margin:0 0 18px}
+  .estimate small{color:#c9d3ff;display:block}
+  .estimate b{font-family:"Plus Jakarta Sans",sans-serif;font-size:1.7rem;color:var(--accent)}
+  .verdict{border-radius:16px;padding:18px 20px;border:1px solid transparent}
+  .verdict.ok{background:linear-gradient(135deg,#e9f9f1,#f6fffa);border-color:#bfe9d3}
+  .amount{font-family:"Plus Jakarta Sans",sans-serif;font-size:2.4rem}
+  .letter h3{display:flex;align-items:center;gap:8px}
+  .letter h3::before{content:"✓";width:26px;height:26px;border-radius:50%;background:var(--ok);color:#fff;display:grid;place-items:center;font-size:.85rem}
+  .letter pre{background:#fff;border:1px solid #e7eaf3;border-top:6px solid var(--brand);box-shadow:0 14px 40px rgba(11,21,48,.10);padding:28px 26px;border-radius:12px}
+  .info div{border:1px solid #fff;box-shadow:0 10px 30px rgba(11,21,48,.06);border-radius:16px;padding:18px}
+  .don{background:linear-gradient(135deg,#0b1530,#2a2f7a);color:#fff;border:0;border-radius:22px;padding:30px}
+  .don p,.don .soon{color:#c9d3ff}
+  .don a.btn{background:linear-gradient(135deg,#ffd76e,#ffb703);color:#0b1530;box-shadow:0 10px 24px rgba(255,183,3,.3)}
+  .combo{position:relative}
+  .sr{position:absolute !important;opacity:0;pointer-events:none;width:1px !important;height:1px;overflow:hidden}
+  .cbtn{width:100%;text-align:left;font:inherit;color:var(--ink);background:#fff;border:1px solid #dde2ee;border-radius:12px;
+        padding:12px 40px 12px 14px;cursor:pointer;position:relative;line-height:1.35;min-height:48px}
+  .cbtn::after{content:"";position:absolute;right:16px;top:50%;width:8px;height:8px;border-right:2px solid #6b7488;border-bottom:2px solid #6b7488;transform:translateY(-70%) rotate(45deg)}
+  .cbtn.vide{color:#8a93a6}
+  .cbtn:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 4px rgba(59,91,253,.15)}
+  .dd .opt.sel{background:#eef1ff;color:var(--brand);font-weight:600}
+  .dd{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:30;background:#fff;border:1px solid #dde2ee;border-radius:14px;
+      box-shadow:0 18px 40px rgba(11,21,48,.18);max-height:260px;overflow:auto;padding:6px}
+  .dd .opt{padding:11px 12px;border-radius:10px;cursor:pointer;font-size:.95rem}
+  .dd .opt:hover,.dd .opt:active{background:#eef1ff;color:var(--brand)}
+  .btn-cafe{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-weight:800;border-radius:999px;padding:12px 20px;
+      background:linear-gradient(135deg,#ffd76e,#ffb703);color:#0b1530;box-shadow:0 10px 26px rgba(255,183,3,.35);white-space:nowrap}
+  .hero .btn-cafe{margin-top:18px}
+  .don-mini{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin:16px 0 4px;padding:16px 18px;
+      border-radius:16px;background:linear-gradient(135deg,#fff7e0,#fff);border:1px solid #ffe2a0}
+  .don-mini strong{display:block}
+  .don-mini span{color:var(--muted);font-size:.9rem}
+  @media (max-width:760px){
+    .hero-grid{grid-template-columns:1fr}
+    .stats{grid-template-columns:repeat(3,1fr)}
+    .stat{padding:10px}
+    .stat b{font-size:1.15rem}
+    .stat span{font-size:.74rem}
+    .panel{padding:20px}
+    .tab .ico{width:38px;height:38px}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="logo"><span class="dot">€</span> Récupérez votre argent</div>
+      <span class="pill-free">Gratuit</span>
+    </div>
+    <div class="hero-grid">
+      <div>
+        <h1>Vol retardé ou produit en panne ?<br><span class="grad">Récupérez ce qu'on vous doit.</span></h1>
+        <p>Répondez à quelques questions. Le site vérifie vos droits et rédige une lettre de réclamation professionnelle, prête à envoyer.</p>
+        <a class="btn-cafe js-don" href="#don">☕ Offrir un café au projet</a>
+        <div class="badges">
+          <span class="badge">✓ Sans compte</span>
+          <span class="badge">✓ 3 minutes</span>
+          <span class="badge">✓ Données gardées sur votre appareil</span>
+        </div>
+      </div>
+      <div class="stats">
+        <div class="stat"><b>600 €</b><span>maximum par passager pour un vol</span></div>
+        <div class="stat"><b>2 ans</b><span>de garantie légale en Belgique</span></div>
+        <div class="stat"><b>0 %</b><span>de commission : vous gardez tout</span></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" id="tab-vol" aria-selected="true" aria-controls="panel-vol">
+      <span class="ico">✈️</span><strong>Vol retardé ou annulé</strong><small>Jusqu'à 600 € par passager</small>
+    </button>
+    <button class="tab" role="tab" id="tab-garantie" aria-selected="false" aria-controls="panel-garantie">
+      <span class="ico">🛠️</span><strong>Achat et garantie</strong><small>Produit en panne, vendeur qui refuse</small>
+    </button>
+  </div>
+
+  <!-- ============ SECTION VOL ============ -->
+  <section class="panel" id="panel-vol" role="tabpanel" aria-labelledby="tab-vol">
+    <h2>Vol retardé ou annulé</h2>
+    <p class="lead">Selon le règlement européen 261/2004, vous pouvez recevoir 250 €, 400 € ou 600 € par passager.</p>
+    <div class="estimate"><div><small>Estimation en direct</small>Montant possible pour votre réservation</div><b id="v-estimate">— €</b></div>
+
+    <form id="form-vol" novalidate>
+      <fieldset>
+        <legend>1. Votre vol</legend>
+        <div class="grid">
+          <div>
+            <label for="v-compagnie">Compagnie aérienne</label>
+            <input id="v-compagnie" placeholder="Choisir ou taper…" autocomplete="off">
+            
+          </div>
+          <div>
+            <label for="v-numero">Numéro de vol</label>
+            <input id="v-numero" placeholder="ex. SN 3123">
+            <span class="hint">Sur votre billet ou votre e-mail de réservation.</span>
+          </div>
+          <div>
+            <label for="v-date">Date du vol</label>
+            <input id="v-date" type="date">
+          </div>
+          <div>
+            <label for="v-reservation">Numéro de réservation <span class="hint">(facultatif)</span></label>
+            <input id="v-reservation" placeholder="ex. ABC123">
+          </div>
+          <div>
+            <label for="v-depart">Aéroport de départ</label>
+            <input id="v-depart" placeholder="Choisir ou taper…" autocomplete="off">
+          </div>
+          <div>
+            <label for="v-arrivee">Aéroport d'arrivée (destination finale)</label>
+            <input id="v-arrivee" placeholder="Choisir ou taper…" autocomplete="off">
+            
+          </div>
+          <div class="full hidden" id="v-auto" style="font-size:.88rem;color:var(--ok);font-weight:600"></div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>2. Ce qui s'est passé</legend>
+        <div class="grid">
+          <div class="full">
+            <label for="v-ue">Votre vol est-il couvert par la règle européenne ?</label>
+            <select id="v-ue">
+              <option value="">— Choisir —</option>
+              <option value="depart">Oui, il partait d'un aéroport de l'Union européenne</option>
+              <option value="compagnie">Il arrivait dans l'UE avec une compagnie européenne</option>
+              <option value="non">Non, ni l'un ni l'autre</option>
+            </select>
+            <span class="hint">L'Islande, la Norvège et la Suisse appliquent aussi cette règle.</span>
+          </div>
+          <div>
+            <label for="v-probleme">Problème</label>
+            <select id="v-probleme">
+              <option value="">— Choisir —</option>
+              <option value="retard">Retard à l'arrivée</option>
+              <option value="annulation">Vol annulé</option>
+            </select>
+          </div>
+          <div id="v-bloc-retard" class="hidden">
+            <label for="v-heures">Retard à l'arrivée finale</label>
+            <select id="v-heures">
+              <option value="">— Choisir —</option>
+              <option value="moins3">Moins de 3 heures</option>
+              <option value="3plus">3 heures ou plus</option>
+            </select>
+            <span class="hint">C'est l'heure d'arrivée qui compte, pas le départ.</span>
+          </div>
+          <div id="v-bloc-annulation" class="hidden">
+            <label for="v-prevenu">Quand avez-vous été prévenu ?</label>
+            <select id="v-prevenu">
+              <option value="">— Choisir —</option>
+              <option value="moins14">Moins de 14 jours avant le départ</option>
+              <option value="plus14">14 jours ou plus avant le départ</option>
+            </select>
+          </div>
+          <div>
+            <label for="v-distance">Distance du vol</label>
+            <select id="v-distance">
+              <option value="">— Choisir —</option>
+              <option value="250">1 500 km ou moins (ex. Bruxelles–Barcelone)</option>
+              <option value="400">Plus de 1 500 km à l'intérieur de l'UE, ou 1 500 à 3 500 km hors UE (ex. Bruxelles–Lisbonne)</option>
+              <option value="600">Plus de 3 500 km avec un pays hors UE (ex. Bruxelles–Montréal)</option>
+            </select>
+          </div>
+          <div>
+            <label for="v-passagers">Nombre de passagers sur la réservation</label>
+            <input id="v-passagers" type="number" min="1" max="20" value="1">
+          </div>
+          <div class="full">
+            <label for="v-raison">Raison donnée par la compagnie <span class="hint">(facultatif)</span></label>
+            <select id="v-raison">
+              <option value="">Aucune ou je ne sais pas</option>
+              <option value="technique">Problème technique</option>
+              <option value="equipage">Manque d'équipage / organisation</option>
+              <option value="meteo">Météo</option>
+              <option value="greve-externe">Grève du contrôle aérien ou de l'aéroport</option>
+              <option value="autre">Autre</option>
+            </select>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>3. Vos coordonnées (pour la lettre)</legend>
+        <div class="grid">
+          <div><label for="v-nom">Nom et prénom</label><input id="v-nom" autocomplete="name"></div>
+          <div><label for="v-email">E-mail</label><input id="v-email" type="email" autocomplete="email"></div>
+          <div class="full"><label for="v-adresse">Adresse</label><input id="v-adresse" autocomplete="street-address" placeholder="Rue, numéro, code postal, ville"></div>
+          <div class="full"><label for="v-iban">IBAN pour le paiement <span class="hint">(facultatif — il n'est jamais envoyé sur internet, il apparaît seulement dans votre lettre)</span></label><input id="v-iban" placeholder="BE.."></div>
+        </div>
+      </fieldset>
+
+      <div class="actions">
+        <button class="btn" type="submit">Vérifier mes droits et créer la lettre</button>
+      </div>
+    </form>
+
+    <div id="v-verdict"></div>
+    <div class="letter" id="v-letter">
+      <h3>Votre lettre</h3>
+      <pre id="v-text"></pre>
+      <div class="actions">
+        <button class="btn" type="button" data-copy="v-text">📋 Copier la lettre</button>
+        <span class="copied hidden" id="v-text-copied">Lettre copiée ✓</span>
+      </div>
+      <div class="don-mini">
+        <div><strong>Ce service gratuit vous a aidé ?</strong><span>Un petit café permet de le garder gratuit pour tout le monde.</span></div>
+        <a class="btn-cafe js-don" href="#don">☕ Offrir un café</a>
+      </div>
+      <ol class="steps">
+        <li>Envoyez la lettre via le formulaire de réclamation ou l'adresse e-mail de la compagnie (sur son site, rubrique « réclamation » ou « contact »).</li>
+        <li>Joignez votre carte d'embarquement ou votre confirmation de réservation.</li>
+        <li>Gardez une copie et notez la date d'envoi.</li>
+        <li>Sans réponse ou en cas de refus injustifié, vous pouvez saisir l'organisme national compétent. En Belgique : le SPF Mobilité et Transports.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============ SECTION GARANTIE ============ -->
+  <section class="panel hidden" id="panel-garantie" role="tabpanel" aria-labelledby="tab-garantie">
+    <h2>Achat et garantie légale</h2>
+    <p class="lead">En Belgique, un produit acheté à un vendeur professionnel est couvert 2 ans. Pendant ces 2 ans, c'est au vendeur de prouver que le défaut ne vient pas du produit.</p>
+
+    <form id="form-garantie" novalidate>
+      <fieldset>
+        <legend>1. Votre achat</legend>
+        <div class="grid">
+          <div>
+            <label for="g-produit">Type de produit</label>
+            <select id="g-produit">
+              <option value="">— Choisir —</option>
+              <option>Smartphone</option><option>Ordinateur portable</option><option>Ordinateur fixe</option><option>Tablette</option>
+              <option>Télévision</option><option>Console de jeux</option><option>Casque ou écouteurs</option><option>Montre connectée</option>
+              <option>Appareil photo</option><option>Imprimante</option><option>Lave-linge</option><option>Sèche-linge</option>
+              <option>Lave-vaisselle</option><option>Réfrigérateur</option><option>Congélateur</option><option>Four</option>
+              <option>Four micro-ondes</option><option>Taque de cuisson</option><option>Hotte</option><option>Machine à café</option>
+              <option>Aspirateur</option><option>Robot de cuisine</option><option>Sèche-cheveux ou rasoir</option><option>Chaudière ou chauffe-eau</option>
+              <option>Vélo électrique</option><option>Trottinette électrique</option><option>Meuble</option><option>Matelas</option>
+              <option>Vêtement ou chaussures</option><option>Outil électrique</option><option>Produit</option>
+            </select>
+          </div>
+          <div>
+            <label for="g-modele">Marque et modèle <span class="hint">(facultatif)</span></label>
+            <input id="g-modele" placeholder="ex. Samsung Galaxy A55">
+          </div>
+          <div>
+            <label for="g-prix">Prix payé (€)</label>
+            <input id="g-prix" type="number" min="0" step="0.01" placeholder="ex. 499">
+          </div>
+          <div>
+            <label for="g-vendeur">Nom du vendeur (magasin ou site)</label>
+            <input id="g-vendeur" placeholder="Choisir ou taper…" autocomplete="off">
+            
+          </div>
+          <div>
+            <label for="g-vendeur-adresse">Adresse du vendeur <span class="hint">(facultatif)</span></label>
+            <input id="g-vendeur-adresse">
+          </div>
+          <div>
+            <label for="g-date">Date de livraison ou de retrait</label>
+            <input id="g-date" type="date">
+            <span class="hint">La garantie commence à la livraison.</span>
+          </div>
+          <div>
+            <label for="g-facture">Numéro de facture ou de ticket <span class="hint">(facultatif)</span></label>
+            <input id="g-facture">
+          </div>
+          <div>
+            <label for="g-type-vendeur">Vous avez acheté à…</label>
+            <select id="g-type-vendeur">
+              <option value="">— Choisir —</option>
+              <option value="pro">Un magasin ou un site professionnel</option>
+              <option value="particulier">Un particulier (ex. annonce entre personnes)</option>
+            </select>
+          </div>
+          <div>
+            <label for="g-etat">État du produit à l'achat</label>
+            <select id="g-etat">
+              <option value="">— Choisir —</option>
+              <option value="neuf">Neuf</option>
+              <option value="occasion2">Occasion (sans mention d'une garantie réduite)</option>
+              <option value="occasion1">Occasion, avec une garantie réduite à 1 an écrite dans le contrat</option>
+            </select>
+          </div>
+          <div class="full">
+            <label for="g-achat-pro">Avez-vous acheté avec un numéro de TVA (pour une entreprise) ?</label>
+            <select id="g-achat-pro">
+              <option value="non">Non, en tant que particulier</option>
+              <option value="oui">Oui, pour mon activité professionnelle</option>
+            </select>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>2. Le problème</legend>
+        <div class="grid">
+          <div class="full">
+            <label for="g-defaut">Le problème</label>
+            <select id="g-defaut">
+              <option value="">— Choisir —</option>
+              <option>ne s'allume plus</option>
+              <option>s'arrête ou redémarre tout seul</option>
+              <option>affiche un message d'erreur et ne fonctionne plus correctement</option>
+              <option>ne charge plus</option>
+              <option>la batterie se décharge anormalement vite</option>
+              <option>l'écran présente un défaut (lignes, taches, pixels morts) sans aucun choc</option>
+              <option>fait un bruit anormal</option>
+              <option>ne chauffe plus</option>
+              <option>ne refroidit plus</option>
+              <option>présente une fuite d'eau</option>
+              <option>une pièce ou un bouton s'est cassé lors d'une utilisation normale</option>
+              <option>le Wi-Fi, le Bluetooth ou la connexion ne fonctionne plus</option>
+              <option>le son ne fonctionne plus</option>
+              <option>s'abîme anormalement vite (couture, semelle, revêtement)</option>
+              <option>ne correspond pas à la description du vendeur</option>
+            </select>
+          </div>
+          <div class="full">
+            <label for="g-details">Détails <span class="hint">(facultatif)</span></label>
+            <textarea id="g-details" placeholder="ex. code erreur E21, en plein cycle de lavage"></textarea>
+          </div>
+          <div>
+            <label for="g-constat">Date où le problème est apparu</label>
+            <input id="g-constat" type="date">
+          </div>
+          <div>
+            <label for="g-demande">Ce que vous demandez</label>
+            <select id="g-demande">
+              <option value="reparation">La réparation gratuite</option>
+              <option value="remplacement">Le remplacement gratuit</option>
+              <option value="remboursement">Le remboursement (la réparation et le remplacement ont échoué ou ont été refusés)</option>
+            </select>
+          </div>
+          <div class="full">
+            <label for="g-reponse">Réponse du vendeur jusqu'ici</label>
+            <select id="g-reponse">
+              <option value="aucune">Je ne l'ai pas encore contacté</option>
+              <option value="fabricant">Il me renvoie vers le fabricant</option>
+              <option value="refus">Il refuse ou dit que c'est de ma faute</option>
+              <option value="payant">Il veut me faire payer la réparation</option>
+              <option value="silence">Il ne répond pas</option>
+            </select>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>3. Vos coordonnées (pour la lettre)</legend>
+        <div class="grid">
+          <div><label for="g-nom">Nom et prénom</label><input id="g-nom" autocomplete="name"></div>
+          <div><label for="g-email">E-mail</label><input id="g-email" type="email" autocomplete="email"></div>
+          <div class="full"><label for="g-adresse">Adresse</label><input id="g-adresse" autocomplete="street-address" placeholder="Rue, numéro, code postal, ville"></div>
+        </div>
+      </fieldset>
+
+      <div class="actions">
+        <button class="btn" type="submit">Vérifier mes droits et créer la lettre</button>
+      </div>
+    </form>
+
+    <div id="g-verdict"></div>
+    <div class="letter" id="g-letter">
+      <h3>Votre lettre</h3>
+      <pre id="g-text"></pre>
+      <div class="actions">
+        <button class="btn" type="button" data-copy="g-text">📋 Copier la lettre</button>
+        <span class="copied hidden" id="g-text-copied">Lettre copiée ✓</span>
+      </div>
+      <div class="don-mini">
+        <div><strong>Ce service gratuit vous a aidé ?</strong><span>Un petit café permet de le garder gratuit pour tout le monde.</span></div>
+        <a class="btn-cafe js-don" href="#don">☕ Offrir un café</a>
+      </div>
+      <ol class="steps">
+        <li>Envoyez la lettre au vendeur par e-mail ou, mieux, par courrier recommandé.</li>
+        <li>Joignez une copie de votre facture ou ticket de caisse. L'emballage d'origine n'est pas obligatoire.</li>
+        <li>Gardez une copie et notez la date d'envoi.</li>
+        <li>Sans solution, signalez le problème au SPF Économie (pointdecontact.belgique.be) ou contactez le Service de médiation pour le consommateur.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============ INFO ============ -->
+  <div class="info">
+    <div><strong>🔒 Confidentiel</strong>Rien n'est envoyé ni enregistré. Tout se passe dans votre navigateur.</div>
+    <div><strong>⚖️ Basé sur la loi</strong>Règlement européen 261/2004 et garantie légale belge (SPF Économie).</div>
+    <div><strong>🤝 Gratuit pour tous</strong>Pas de commission sur ce que vous récupérez. Vous gardez 100 %.</div>
+  </div>
+
+  <!-- ============ DON ============ -->
+  <div class="don" id="don">
+    <h3>Ce site vous a aidé ?</h3>
+    <p>Il est gratuit et le restera. Si vous avez récupéré votre argent, vous pouvez soutenir le projet avec le montant de votre choix.</p>
+    <div class="amounts" id="don-boutons"></div>
+    <div class="soon hidden" id="don-bientot">Le bouton de soutien arrive bientôt. Merci !</div>
+  </div>
+
+  <footer>
+    <p><strong>Important :</strong> ce site donne une information générale et un modèle de lettre. Ce n'est pas un conseil juridique personnalisé, et il ne garantit pas le résultat. En cas de doute, contactez un service d'aide aux consommateurs.</p>
+    <p>Sources officielles :</p>
+    <ul>
+      <li><a href="https://eur-lex.europa.eu/legal-content/FR/TXT/?uri=CELEX:32004R0261" target="_blank" rel="noopener">Règlement (CE) n° 261/2004 — EUR-Lex</a></li>
+      <li><a href="https://europa.eu/youreurope/citizens/travel/passenger-rights/air/index_fr.htm" target="_blank" rel="noopener">Droits des passagers aériens — L'Europe est à vous</a></li>
+      <li><a href="https://economie.fgov.be/fr/themes/protection-des-consommateurs/garanties" target="_blank" rel="noopener">Garantie légale — SPF Économie</a></li>
+      <li><a href="https://pointdecontact.belgique.be" target="_blank" rel="noopener">Signaler un problème — ConsumerConnect</a></li>
+    </ul>
+    <p>Dernière vérification des règles : novembre 2026. Une réforme européenne des droits des passagers aériens a été adoptée en 2026 ; elle garde le seuil de 3 heures et les montants actuels.</p>
+  </footer>
+</main>
+
+<script>
+/* ===== Réglage du bouton de don =====
+   Mettez ici votre lien (Ko-fi, PayPal.me…). Laissez vide pour afficher « bientôt ». */
+const LIEN_DON = "https://ko-fi.com/recupargent";
+
+(function(){
+  const $ = id => document.getElementById(id);
+  const val = id => ($(id).value || "").trim();
+  const today = () => new Date().toLocaleDateString("fr-BE",{day:"numeric",month:"long",year:"numeric"});
+  const fmtDate = s => s ? new Date(s+"T12:00:00").toLocaleDateString("fr-BE",{day:"numeric",month:"long",year:"numeric"}) : "[date]";
+  const or = (v, ph) => v || ph;
+
+  /* Onglets */
+  const tabs = [["tab-vol","panel-vol"],["tab-garantie","panel-garantie"]];
+  function show(which){
+    tabs.forEach(([t,p]) => {
+      const on = t === which;
+      $(t).setAttribute("aria-selected", on);
+      $(p).classList.toggle("hidden", !on);
+    });
+    try{ history.replaceState(null,"", which==="tab-vol" ? "#vol" : "#garantie"); }catch(e){}
+  }
+  tabs.forEach(([t]) => $(t).addEventListener("click", () => show(t)));
+  if (location.hash === "#garantie") show("tab-garantie");
+
+  /* Affichage conditionnel vol */
+  $("v-probleme").addEventListener("change", () => {
+    const p = val("v-probleme");
+    $("v-bloc-retard").classList.toggle("hidden", p !== "retard");
+    $("v-bloc-annulation").classList.toggle("hidden", p !== "annulation");
+  });
+
+  /* ===== Liste déroulante maison ===== */
+  const norm = s => s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+  function combo(input, items){
+    const box = input.parentElement; box.classList.add("combo");
+    input.setAttribute("autocomplete","off");
+    const dd = document.createElement("div"); dd.className = "dd hidden"; box.appendChild(dd);
+    function render(){
+      const q = norm(input.value.trim());
+      const res = (q ? items.filter(i => norm(i).includes(q)) : items).slice(0, 40);
+      if (!res.length){ dd.classList.add("hidden"); return; }
+      dd.innerHTML = res.map(i => `<div class="opt">${i.replace(/</g,"&lt;")}</div>`).join("");
+      dd.classList.remove("hidden");
+    }
+    input.addEventListener("focus", () => { render(); setTimeout(() => input.scrollIntoView({block:"start",behavior:"smooth"}), 250); });
+    input.addEventListener("input", render);
+    input.addEventListener("blur", () => setTimeout(() => dd.classList.add("hidden"), 180));
+    dd.addEventListener("mousedown", e => e.preventDefault());
+    dd.addEventListener("click", e => {
+      const o = e.target.closest(".opt"); if (!o) return;
+      input.value = o.textContent; dd.classList.add("hidden");
+      input.dispatchEvent(new Event("change")); input.blur();
+    });
+  }
+
+  /* ===== Listes à choix fixe, au style du site ===== */
+  const fermerTout = except => document.querySelectorAll(".cselect .dd").forEach(d => { if (d !== except) d.classList.add("hidden"); });
+  function stylerSelect(sel){
+    const w = document.createElement("div"); w.className = "cselect combo";
+    const b = document.createElement("button"); b.type = "button"; b.className = "cbtn";
+    const dd = document.createElement("div"); dd.className = "dd hidden";
+    sel.after(w); w.append(b, dd); sel.classList.add("sr");
+    sel._refresh = () => {
+      const o = sel.options[sel.selectedIndex];
+      b.textContent = o ? o.text : "— Choisir —";
+      b.classList.toggle("vide", !sel.value);
+    };
+    b.addEventListener("click", () => {
+      const open = dd.classList.contains("hidden");
+      fermerTout(dd);
+      if (!open){ dd.classList.add("hidden"); return; }
+      dd.innerHTML = [...sel.options].filter(o => o.value !== "" || sel.id === "v-raison")
+        .map(o => `<div class="opt${o.value === sel.value ? " sel" : ""}" data-v="${o.value.replace(/"/g,"&quot;")}">${o.text}</div>`).join("");
+      dd.classList.remove("hidden");
+    });
+    dd.addEventListener("click", e => {
+      const o = e.target.closest(".opt"); if (!o) return;
+      sel.value = o.dataset.v; dd.classList.add("hidden");
+      sel._refresh(); sel.dispatchEvent(new Event("change"));
+    });
+    sel._refresh();
+  }
+  document.querySelectorAll("form select").forEach(stylerSelect);
+  document.addEventListener("click", e => { if (!e.target.closest(".cselect")) fermerTout(); });
+  const rafraichir = () => document.querySelectorAll("select").forEach(s => s._refresh && s._refresh());
+
+  /* ===== Textes garantie ===== */
+  function produitTxt(){
+    const p = val("g-produit"), m = val("g-modele");
+    if (!p && !m) return "[produit]";
+    return [p, m].filter(Boolean).join(" ");
+  }
+  function defautTxt(){
+    const d = val("g-defaut"), x = val("g-details");
+    if (!d && !x) return "[description du problème].";
+    return (d ? "il " + d : "") + (d && x ? " (" + x + ")" : x) + ".";
+  }
+
+  /* ===== Données : compagnies et aéroports =====
+     z = dans la zone de la règle (UE + Islande, Norvège, Suisse) */
+  const COMPAGNIES = [
+    ["Brussels Airlines","SN",1],["TUI fly Belgium","TB",1],["Ryanair","FR",1],["easyJet","U2",1],["Wizz Air","W6",1],
+    ["Vueling","VY",1],["Transavia","HV",1],["Air France","AF",1],["KLM","KL",1],["Lufthansa","LH",1],["Iberia","IB",1],
+    ["Air Europa","UX",1],["TAP Air Portugal","TP",1],["ITA Airways","AZ",1],["Aegean Airlines","A3",1],["Austrian Airlines","OS",1],
+    ["Swiss","LX",1],["SAS","SK",1],["Finnair","AY",1],["Eurowings","EW",1],["Volotea","V7",1],["Corendon","CD",1],
+    ["Luxair","LG",1],["Aer Lingus","EI",1],["LOT Polish Airlines","LO",1],["Condor","DE",1],["Norwegian","DY",1],
+    ["Icelandair","FI",1],["Binter","NT",1],["Corsair","SS",1],["Air Caraïbes","TX",1],
+    ["British Airways","BA",0],["Jet2","LS",0],["Turkish Airlines","TK",0],["Pegasus","PC",0],["SunExpress","XQ",0],
+    ["Royal Air Maroc","AT",0],["Air Arabia","3O",0],["Tunisair","TU",0],["Nouvelair","BJ",0],["Air Algérie","AH",0],
+    ["EgyptAir","MS",0],["Emirates","EK",0],["Qatar Airways","QR",0],["Etihad","EY",0],["Ethiopian Airlines","ET",0],
+    ["RwandAir","WB",0],["Air Canada","AC",0],["Air Transat","TS",0],["Delta","DL",0],["United Airlines","UA",0],["American Airlines","AA",0]
+  ];
+  const AEROPORTS = [
+    ["BRU","Bruxelles","Belgique",50.90,4.48,1],["CRL","Charleroi","Belgique",50.46,4.45,1],["LGG","Liège","Belgique",50.64,5.44,1],
+    ["ANR","Anvers","Belgique",51.19,4.46,1],["OST","Ostende","Belgique",51.20,2.86,1],["AMS","Amsterdam","Pays-Bas",52.31,4.76,1],
+    ["EIN","Eindhoven","Pays-Bas",51.45,5.37,1],["LUX","Luxembourg","Luxembourg",49.63,6.21,1],["CDG","Paris-Charles de Gaulle","France",49.01,2.55,1],
+    ["ORY","Paris-Orly","France",48.72,2.38,1],["NCE","Nice","France",43.66,7.22,1],["MRS","Marseille","France",43.44,5.22,1],
+    ["LYS","Lyon","France",45.73,5.08,1],["TLS","Toulouse","France",43.63,1.37,1],["BOD","Bordeaux","France",44.83,-0.72,1],
+    ["BIQ","Biarritz","France",43.47,-1.52,1],["AJA","Ajaccio","France",41.92,8.80,1],["BIA","Bastia","France",42.55,9.48,1],
+    ["MAD","Madrid","Espagne",40.47,-3.56,1],["BCN","Barcelone","Espagne",41.30,2.08,1],["AGP","Malaga","Espagne",36.67,-4.50,1],
+    ["ALC","Alicante","Espagne",38.28,-0.56,1],["PMI","Palma de Majorque","Espagne",39.55,2.74,1],["VLC","Valence","Espagne",39.49,-0.48,1],
+    ["SVQ","Séville","Espagne",37.42,-5.90,1],["IBZ","Ibiza","Espagne",38.87,1.37,1],["TFS","Tenerife Sud","Espagne",28.04,-16.57,1],
+    ["LPA","Gran Canaria","Espagne",27.93,-15.39,1],["ACE","Lanzarote","Espagne",28.95,-13.61,1],["FUE","Fuerteventura","Espagne",28.45,-13.86,1],
+    ["FAO","Faro","Portugal",37.01,-7.97,1],["LIS","Lisbonne","Portugal",38.77,-9.13,1],["OPO","Porto","Portugal",41.24,-8.68,1],
+    ["FNC","Madère (Funchal)","Portugal",32.70,-16.77,1],["FCO","Rome-Fiumicino","Italie",41.80,12.25,1],["MXP","Milan-Malpensa","Italie",45.63,8.72,1],
+    ["BGY","Bergame","Italie",45.67,9.70,1],["VCE","Venise","Italie",45.51,12.35,1],["NAP","Naples","Italie",40.88,14.29,1],
+    ["CTA","Catane","Italie",37.47,15.07,1],["PMO","Palerme","Italie",38.18,13.10,1],["BLQ","Bologne","Italie",44.53,11.29,1],
+    ["BRI","Bari","Italie",41.14,16.76,1],["ATH","Athènes","Grèce",37.94,23.94,1],["HER","Héraklion (Crète)","Grèce",35.34,25.18,1],
+    ["RHO","Rhodes","Grèce",36.41,28.09,1],["CFU","Corfou","Grèce",39.60,19.91,1],["KGS","Kos","Grèce",36.79,27.09,1],
+    ["SKG","Thessalonique","Grèce",40.52,22.97,1],["BER","Berlin","Allemagne",52.37,13.50,1],["FRA","Francfort","Allemagne",50.03,8.56,1],
+    ["MUC","Munich","Allemagne",48.35,11.79,1],["DUS","Düsseldorf","Allemagne",51.29,6.77,1],["VIE","Vienne","Autriche",48.11,16.57,1],
+    ["ZRH","Zurich","Suisse",47.46,8.55,1],["GVA","Genève","Suisse",46.24,6.11,1],["CPH","Copenhague","Danemark",55.62,12.65,1],
+    ["ARN","Stockholm","Suède",59.65,17.92,1],["OSL","Oslo","Norvège",60.19,11.10,1],["HEL","Helsinki","Finlande",60.32,24.96,1],
+    ["KEF","Reykjavik","Islande",63.99,-22.62,1],["DUB","Dublin","Irlande",53.42,-6.27,1],["PRG","Prague","Tchéquie",50.10,14.26,1],
+    ["BUD","Budapest","Hongrie",47.44,19.26,1],["WAW","Varsovie","Pologne",52.17,20.97,1],["KRK","Cracovie","Pologne",50.08,19.78,1],
+    ["OTP","Bucarest","Roumanie",44.57,26.10,1],["SOF","Sofia","Bulgarie",42.70,23.41,1],["DBV","Dubrovnik","Croatie",42.56,18.27,1],
+    ["SPU","Split","Croatie",43.54,16.30,1],["MLA","Malte","Malte",35.86,14.48,1],["LCA","Larnaca","Chypre",34.88,33.62,1],
+    ["RUN","La Réunion","France",-20.89,55.51,1],["PTP","Pointe-à-Pitre (Guadeloupe)","France",16.27,-61.53,1],["FDF","Fort-de-France (Martinique)","France",14.59,-61.00,1],
+    ["LHR","Londres-Heathrow","Royaume-Uni",51.47,-0.45,0],["LGW","Londres-Gatwick","Royaume-Uni",51.15,-0.19,0],["EDI","Édimbourg","Royaume-Uni",55.95,-3.37,0],
+    ["IST","Istanbul","Turquie",41.26,28.74,0],["SAW","Istanbul-Sabiha Gökçen","Turquie",40.90,29.31,0],["AYT","Antalya","Turquie",36.90,30.80,0],
+    ["DLM","Dalaman","Turquie",36.71,28.79,0],["BJV","Bodrum","Turquie",37.25,27.66,0],["CMN","Casablanca","Maroc",33.37,-7.59,0],
+    ["RAK","Marrakech","Maroc",31.61,-8.04,0],["AGA","Agadir","Maroc",30.33,-9.41,0],["TNG","Tanger","Maroc",35.73,-5.92,0],
+    ["NDR","Nador","Maroc",34.99,-3.03,0],["FEZ","Fès","Maroc",33.93,-4.98,0],["TUN","Tunis","Tunisie",36.85,10.23,0],
+    ["DJE","Djerba","Tunisie",33.87,10.78,0],["MIR","Monastir","Tunisie",35.76,10.75,0],["ALG","Alger","Algérie",36.69,3.22,0],
+    ["ORN","Oran","Algérie",35.62,-0.62,0],["CAI","Le Caire","Égypte",30.12,31.41,0],["HRG","Hurghada","Égypte",27.18,33.80,0],
+    ["SSH","Charm el-Cheikh","Égypte",27.98,34.39,0],["TLV","Tel-Aviv","Israël",32.01,34.89,0],["DXB","Dubaï","Émirats arabes unis",25.25,55.36,0],
+    ["DOH","Doha","Qatar",25.27,51.61,0],["JFK","New York-JFK","États-Unis",40.64,-73.78,0],["MIA","Miami","États-Unis",25.79,-80.29,0],
+    ["LAX","Los Angeles","États-Unis",33.94,-118.41,0],["YUL","Montréal","Canada",45.47,-73.74,0],["CUN","Cancún","Mexique",21.04,-86.87,0],
+    ["PUJ","Punta Cana","Rép. dominicaine",18.57,-68.36,0],["GRU","São Paulo","Brésil",-23.43,-46.47,0],["BKK","Bangkok","Thaïlande",13.69,100.75,0],
+    ["FIH","Kinshasa","RD Congo",-4.39,15.44,0],["DSS","Dakar","Sénégal",14.67,-17.07,0],["ABJ","Abidjan","Côte d'Ivoire",5.26,-3.93,0],
+    ["DLA","Douala","Cameroun",4.01,9.72,0],["KGL","Kigali","Rwanda",-1.97,30.14,0],["EBB","Entebbe","Ouganda",0.04,32.44,0],
+    ["NBO","Nairobi","Kenya",-1.32,36.93,0],["ADD","Addis-Abeba","Éthiopie",8.98,38.80,0],["JNB","Johannesburg","Afrique du Sud",-26.14,28.24,0]
+  ];
+  const nomAero = a => `${a[1]} (${a[0]}) – ${a[2]}`;
+  const VENDEURS = ["MediaMarkt","Krëfel","Vanden Borre","Coolblue","Fnac","Amazon","Bol.com","Back Market","Apple Store","Samsung Shop",
+    "Proximus","Orange","Telenet","IKEA","Decathlon","Brico","Hubo","Gamma","Leroy Merlin","Action","Carrefour","Lidl","Aldi",
+    "Zalando","Electro Depot","Euro Shop","Darty","Boulanger","Cdiscount"];
+  combo($("v-depart"), AEROPORTS.map(nomAero));
+  combo($("v-arrivee"), AEROPORTS.map(nomAero));
+  combo($("v-compagnie"), COMPAGNIES.map(c => c[0]));
+  combo($("g-vendeur"), VENDEURS);
+
+  const trouverAero = txt => {
+    const m = (txt || "").match(/\(([A-Z]{3})\)/);
+    return m ? AEROPORTS.find(a => a[0] === m[1]) : null;
+  };
+  const trouverCie = txt => COMPAGNIES.find(c => c[0].toLowerCase() === (txt || "").trim().toLowerCase());
+  function distanceKm(a, b){
+    const R = 6371, r = x => x * Math.PI / 180;
+    const dLat = r(b[3]-a[3]), dLon = r(b[4]-a[4]);
+    const h = Math.sin(dLat/2)**2 + Math.cos(r(a[3]))*Math.cos(r(b[3]))*Math.sin(dLon/2)**2;
+    return 2 * R * Math.asin(Math.sqrt(h));
+  }
+
+  /* Remplissage automatique : distance et couverture */
+  function auto(){
+    const dep = trouverAero(val("v-depart")), arr = trouverAero(val("v-arrivee")), cie = trouverCie(val("v-compagnie"));
+    const msgs = [];
+    if (cie && !val("v-numero")) $("v-numero").placeholder = `ex. ${cie[1]} 1234`;
+    if (dep && arr && dep !== arr){
+      const km = Math.round(distanceKm(dep, arr));
+      let cat;
+      if (km <= 1500) cat = "250";
+      else if (dep[5] && arr[5]) cat = "400";
+      else if (km <= 3500) cat = "400";
+      else cat = "600";
+      $("v-distance").value = cat;
+      msgs.push(`✓ Distance calculée : environ ${km.toLocaleString("fr-BE")} km`);
+      let ue = "";
+      if (dep[5]) ue = "depart";
+      else if (arr[5] && cie) ue = cie[2] ? "compagnie" : "non";
+      else if (!arr[5]) ue = "non";
+      if (ue){ $("v-ue").value = ue; msgs.push("✓ Couverture par la règle européenne vérifiée"); }
+    }
+    rafraichir();
+    $("v-auto").textContent = msgs.join("   ·   ");
+    $("v-auto").classList.toggle("hidden", !msgs.length);
+    estimer();
+  }
+  ["v-depart","v-arrivee","v-compagnie"].forEach(id => { $(id).addEventListener("change", auto); $(id).addEventListener("input", auto); });
+
+  /* Estimation en direct */
+  function estimer(){
+    const u = parseInt(val("v-distance")), p = Math.max(1, parseInt(val("v-passagers")) || 1);
+    $("v-estimate").textContent = u ? (u*p).toLocaleString("fr-BE") + " €" : "— €";
+  }
+  ["v-distance","v-passagers"].forEach(id => { $(id).addEventListener("change", estimer); $(id).addEventListener("input", estimer); });
+
+  function verdict(box, kind, title, body){
+    $(box).innerHTML = `<div class="verdict ${kind}"><strong>${title}</strong>${body}</div>`;
+  }
+
+  /* ===== VOL ===== */
+  $("form-vol").addEventListener("submit", e => {
+    e.preventDefault();
+    $("v-letter").classList.remove("show");
+    const ue = val("v-ue"), pb = val("v-probleme"), dist = val("v-distance");
+    if (!ue || !pb || !dist || (pb==="retard" && !val("v-heures")) || (pb==="annulation" && !val("v-prevenu"))){
+      verdict("v-verdict","warn","Il manque une réponse.","Merci de compléter la partie « Ce qui s'est passé ».");
+      return;
+    }
+    if (ue === "non"){
+      verdict("v-verdict","bad","Ce vol n'est probablement pas couvert.","La règle européenne s'applique aux vols qui partent de l'UE, ou qui arrivent dans l'UE avec une compagnie européenne. Vérifiez les règles du pays concerné.");
+      return;
+    }
+    if (pb === "retard" && val("v-heures") === "moins3"){
+      verdict("v-verdict","bad","Pas d'indemnité pour un retard de moins de 3 heures.","Vous gardez le droit à une assistance (repas, boissons) pendant l'attente. Si vous avez payé ces frais vous-même, vous pouvez en demander le remboursement.");
+      return;
+    }
+    if (pb === "annulation" && val("v-prevenu") === "plus14"){
+      verdict("v-verdict","bad","Pas d'indemnité si vous avez été prévenu 14 jours avant ou plus.","Vous avez toutefois droit au remboursement du billet ou à un autre vol, au choix.");
+      return;
+    }
+    const pax = Math.max(1, parseInt(val("v-passagers")) || 1);
+    const unit = parseInt(dist), total = unit * pax;
+    let note = "";
+    const r = val("v-raison");
+    if (r === "meteo" || r === "greve-externe"){
+      note = "<br><br>⚠️ La compagnie peut refuser en invoquant des « circonstances extraordinaires » (météo, grève extérieure à la compagnie). Vous pouvez quand même réclamer : c'est à elle de le prouver.";
+    } else if (r === "technique" || r === "equipage"){
+      note = "<br><br>👍 Un problème technique ou un manque d'équipage n'est en général pas une circonstance extraordinaire.";
+    }
+    if (pb === "annulation"){
+      note += "<br><br>ℹ️ Si la compagnie vous a proposé un autre vol arrivant presque à l'heure prévue, l'indemnité peut être réduite ou supprimée.";
+    }
+    verdict("v-verdict","ok","Vous avez probablement droit à une indemnité.",
+      `<span class="amount">${total.toLocaleString("fr-BE")} €</span>${unit} € × ${pax} passager${pax>1?"s":""}, en plus du remboursement de vos frais éventuels.${note}`);
+
+    const probTxt = pb === "retard"
+      ? `Ce vol est arrivé à destination avec un retard de plus de trois heures.`
+      : `Ce vol a été annulé et j'en ai été informé(e) moins de 14 jours avant le départ.`;
+    const art = pb === "retard"
+      ? `l'article 7 du règlement (CE) n° 261/2004, tel qu'interprété par la Cour de justice de l'Union européenne (arrêt Sturgeon, C-402/07 et C-432/07)`
+      : `les articles 5 et 7 du règlement (CE) n° 261/2004`;
+    const iban = val("v-iban");
+
+    $("v-text").textContent =
+`${or(val("v-nom"),"[Nom et prénom]")}
+${or(val("v-adresse"),"[Adresse]")}
+${or(val("v-email"),"[E-mail]")}
+
+À l'attention du service client de ${or(val("v-compagnie"),"[Compagnie aérienne]")}
+
+Le ${today()}
+
+Objet : Demande d'indemnisation — vol ${or(val("v-numero"),"[numéro de vol]")} du ${fmtDate(val("v-date"))}${val("v-reservation") ? ` — réservation ${val("v-reservation")}` : ""}
+
+Madame, Monsieur,
+
+J'étais passager(ère) du vol ${or(val("v-numero"),"[numéro de vol]")} du ${fmtDate(val("v-date"))}, de ${or(val("v-depart"),"[aéroport de départ]")} à ${or(val("v-arrivee"),"[aéroport d'arrivée]")}${pax>1 ? `, avec ${pax-1} autre${pax>2?"s":""} passager${pax>2?"s":""} sur la même réservation` : ""}.
+
+${probTxt}
+
+Conformément à ${art}, je vous demande le versement de l'indemnité forfaitaire de ${unit} € par passager, soit ${total.toLocaleString("fr-BE")} € au total.
+
+Si vous estimez que ce ${pb==="retard"?"retard":"cette annulation"} est dû(e) à des circonstances extraordinaires, je vous remercie de m'en fournir la preuve détaillée, ainsi que la preuve que toutes les mesures raisonnables ont été prises pour l'éviter.
+
+${iban ? `Je vous remercie de verser ce montant sur le compte ${iban}, au nom de ${or(val("v-nom"),"[Nom]")}.` : `Je vous remercie de m'indiquer les modalités de paiement.`}
+
+Je vous remercie de me répondre dans un délai de 30 jours. À défaut, je me réserve le droit de saisir l'organisme national chargé du contrôle des droits des passagers ou les juridictions compétentes.
+
+Vous trouverez en pièce jointe ma carte d'embarquement ou ma confirmation de réservation.
+
+Veuillez agréer, Madame, Monsieur, mes salutations distinguées.
+
+${or(val("v-nom"),"[Nom et prénom]")}`;
+    $("v-letter").classList.add("show");
+    $("v-verdict").scrollIntoView({behavior:"smooth",block:"start"});
+  });
+
+  /* ===== GARANTIE ===== */
+  $("form-garantie").addEventListener("submit", e => {
+    e.preventDefault();
+    $("g-letter").classList.remove("show");
+    const tv = val("g-type-vendeur"), etat = val("g-etat"), d = val("g-date");
+    if (!tv || !etat || !d){
+      verdict("g-verdict","warn","Il manque une réponse.","Merci d'indiquer le type de vendeur, l'état du produit et la date de livraison.");
+      return;
+    }
+    if (tv === "particulier"){
+      verdict("g-verdict","bad","La garantie légale ne s'applique pas entre particuliers.","Elle concerne uniquement les achats auprès d'un vendeur professionnel. Entre particuliers, seule la garantie contre les « vices cachés » peut s'appliquer, avec des règles différentes.");
+      return;
+    }
+    if (val("g-achat-pro") === "oui"){
+      verdict("g-verdict","bad","La garantie légale protège les consommateurs.","Un achat pour une activité professionnelle (avec numéro de TVA) n'est pas couvert par ces règles. Vérifiez votre contrat avec le vendeur.");
+      return;
+    }
+    const livraison = new Date(d+"T12:00:00");
+    const ref = val("g-constat") ? new Date(val("g-constat")+"T12:00:00") : new Date();
+    const mois = (ref - livraison) / (1000*60*60*24*30.44);
+    const limite = etat === "occasion1" ? 12 : 24;
+    if (mois < 0){
+      verdict("g-verdict","warn","Vérifiez les dates.","La date du problème est avant la date de livraison.");
+      return;
+    }
+    if (mois > limite){
+      verdict("g-verdict","bad",`Le délai de garantie de ${limite===12?"1 an":"2 ans"} semble dépassé.`,"La garantie légale couvre les défauts qui apparaissent dans ce délai après la livraison. Vérifiez si le fabricant offre une garantie commerciale plus longue.");
+      return;
+    }
+    let extra = "";
+    const rep = val("g-reponse");
+    if (rep === "fabricant") extra = "<br><br>👉 Le vendeur ne peut pas vous renvoyer vers le fabricant : c'est lui qui est responsable de la garantie légale.";
+    if (rep === "payant") extra = "<br><br>👉 Pendant la garantie légale, la réparation ou le remplacement doivent être gratuits.";
+    if (rep === "refus") extra = "<br><br>👉 Pendant la garantie, ce n'est pas à vous de prouver que le défaut existait : c'est au vendeur de prouver le contraire.";
+    verdict("g-verdict","ok","Votre produit est probablement couvert par la garantie légale.",
+      `Livré il y a environ ${Math.max(0,Math.round(mois))} mois, pour une garantie de ${limite===12?"12":"24"} mois.${extra}`);
+
+    const demandeTxt = {
+      reparation: "la réparation gratuite du produit, dans un délai raisonnable et sans inconvénient majeur pour moi",
+      remplacement: "le remplacement gratuit du produit par un produit conforme, dans un délai raisonnable et sans inconvénient majeur pour moi",
+      remboursement: `le remboursement du prix payé${val("g-prix") ? ` (${Number(val("g-prix")).toLocaleString("fr-BE",{minimumFractionDigits:2,maximumFractionDigits:2})} €)` : ""}, la réparation ou le remplacement ayant échoué ou ayant été refusés, ou à défaut une réduction appropriée du prix`
+    }[val("g-demande")];
+    const repTxt = {
+      aucune: "",
+      fabricant: "\nVous m'avez renvoyé(e) vers le fabricant. Je vous rappelle qu'en tant que vendeur, vous êtes le seul responsable de la garantie légale à mon égard.\n",
+      refus: "\nVous avez refusé ma demande. Je vous rappelle que, pendant toute la durée de la garantie légale, il vous appartient de prouver que le défaut n'existait pas au moment de la livraison.\n",
+      payant: "\nVous m'avez proposé une réparation payante. Je vous rappelle que, dans le cadre de la garantie légale, la mise en conformité doit être gratuite.\n",
+      silence: "\nMa demande précédente est restée sans réponse.\n"
+    }[rep];
+
+    $("g-text").textContent =
+`${or(val("g-nom"),"[Nom et prénom]")}
+${or(val("g-adresse"),"[Adresse]")}
+${or(val("g-email"),"[E-mail]")}
+
+${or(val("g-vendeur"),"[Nom du vendeur]")}
+${val("g-vendeur-adresse") || "[Adresse du vendeur]"}
+
+Le ${today()}
+
+Objet : Mise en œuvre de la garantie légale de conformité — ${produitTxt()}${val("g-facture") ? ` — facture n° ${val("g-facture")}` : ""}
+
+Madame, Monsieur,
+
+Le ${fmtDate(d)}, vous m'avez livré le produit suivant : ${produitTxt()}${val("g-prix") ? `, au prix de ${Number(val("g-prix")).toLocaleString("fr-BE",{minimumFractionDigits:2,maximumFractionDigits:2})} €` : ""}.
+
+${val("g-constat") ? `Depuis le ${fmtDate(val("g-constat"))}, ce` : "Ce"} produit présente le défaut suivant : ${defautTxt()}
+${repTxt}
+Ce défaut est apparu moins de ${limite===12?"un an":"deux ans"} après la livraison. Conformément aux règles de la garantie légale de conformité applicables en Belgique (articles 1649bis et suivants de l'ancien Code civil), vous êtes tenu(e) de répondre de ce défaut de conformité. Pendant toute la durée de la garantie, le défaut est présumé avoir existé au moment de la livraison, sauf preuve contraire de votre part.
+
+Je vous demande donc ${demandeTxt}.
+
+Je vous remercie de me faire part de votre réponse dans un délai de 15 jours à compter de la réception de ce courrier. À défaut, je me réserve le droit de signaler ce litige au SPF Économie et de saisir le Service de médiation pour le consommateur ou les juridictions compétentes.
+
+Vous trouverez en pièce jointe une copie de ma preuve d'achat.
+
+Veuillez agréer, Madame, Monsieur, mes salutations distinguées.
+
+${or(val("g-nom"),"[Nom et prénom]")}`;
+    $("g-letter").classList.add("show");
+    $("g-verdict").scrollIntoView({behavior:"smooth",block:"start"});
+  });
+
+  /* ===== Copier ===== */
+  document.querySelectorAll("[data-copy]").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const id = btn.getAttribute("data-copy");
+      const text = $(id).textContent;
+      let ok = false;
+      try { await navigator.clipboard.writeText(text); ok = true; } catch(e) {
+        try {
+          const r = document.createRange(); r.selectNodeContents($(id));
+          const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+          ok = document.execCommand && document.execCommand("copy");
+        } catch(e2) {}
+      }
+      const c = $(id+"-copied");
+      c.textContent = ok ? "Lettre copiée ✓" : "Sélectionnez le texte et copiez-le à la main.";
+      c.classList.remove("hidden");
+      setTimeout(() => c.classList.add("hidden"), 4000);
+    });
+  });
+
+  /* ===== Don ===== */
+  document.querySelectorAll(".js-don").forEach(a => {
+    if (LIEN_DON){ a.href = LIEN_DON; a.target = "_blank"; a.rel = "noopener"; } else { a.href = "#don"; }
+  });
+  if (LIEN_DON){
+    $("don-boutons").innerHTML = ["2 €","5 €","Montant libre"].map(m =>
+      `<a class="btn" href="${LIEN_DON}" target="_blank" rel="noopener">☕ ${m}</a>`).join("");
+  } else {
+    $("don-bientot").classList.remove("hidden");
+  }
+})();
+</script>
+</body>
+</html>
